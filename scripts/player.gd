@@ -14,20 +14,32 @@ var direction = 0
 var gundirection = Vector2.ZERO
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+# --- MANA VARIABLES ---
+# We ONLY track current mana here. Max and Regen come from the Global script!
+var current_mana = 0.0
+var mana_cost = 20.0
+
+# --- NODES ---
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var FireballAim = $fireballPosition 
 
-# --- MANA VARIABLES ---
-var max_mana = 100.0
-var current_mana = 100.0
-var mana_cost = 20.0
-var mana_regen_rate = 15.0
-
-# --- UI REFERENCE (Make sure you added the nodes!) ---
-@onready var mana_bar = $CanvasLayer/ProgressBar 
+# Ensure you have added these nodes to your scene as discussed!
+@onready var mana_bar = $CanvasLayer/ProgressBar
+@onready var shop_menu = $CanvasLayer/ShopMenu 
 
 var fireball_path = preload("res://scene/fireballl_attack.tscn")
+
+# New variable for double jump
+var jumps_left = 2
+
+func _ready():
+	# Start with full mana based on your Global stat
+	current_mana = Global.max_mana
+	
+	# Hide the shop when the game starts
+	if shop_menu:
+		shop_menu.visible = false
 
 func fire(fire_direction):
 	var fireball = fireball_path.instantiate()
@@ -35,22 +47,31 @@ func fire(fire_direction):
 	fireball.pos = $fireballPosition.global_position
 	get_parent().add_child(fireball)
 
-var jumps_left = 2
-
 func _physics_process(delta):
-	# Reset jumps when on the floor
-	if is_on_floor():
-		jumps_left = 2
+	# --- SHOP INPUT ---
+	if Input.is_action_just_pressed("shop"): 
+		if shop_menu.visible:
+			shop_menu.visible = false
+			get_tree().paused = false 
+		else:
+			shop_menu.visible = true
+			get_tree().paused = true 
+
+	# --- STOP EVERYTHING ELSE IF PAUSED ---
+	# Add this check right here!
+	if get_tree().paused:
+		return
 
 	# --- MANA LOGIC ---
-	# Regenerate mana
-	if current_mana < max_mana:
-		current_mana += mana_regen_rate * delta
-		if current_mana > max_mana:
-			current_mana = max_mana
+	# Regenerate using the GLOBAL regen speed
+	if current_mana < Global.max_mana:
+		current_mana += Global.mana_regen * delta
+		if current_mana > Global.max_mana:
+			current_mana = Global.max_mana
 	
-	# Update the visual bar
+	# Update the UI Bar
 	if mana_bar:
+		mana_bar.max_value = Global.max_mana # Bar grows if you buy upgrades!
 		mana_bar.value = current_mana
 
 	# --- FIREBALL LOGIC ---
@@ -66,16 +87,18 @@ func _physics_process(delta):
 		else:
 			print("Not enough mana!")
 
+	# --- MOVEMENT LOGIC (Unchanged) ---
+	if is_on_floor():
+		jumps_left = 2
+
 	if Input.is_action_just_pressed("left"):
 		FireballAim.position.x = -9
 	if Input.is_action_just_pressed("right"):
 		FireballAim.position.x = 9
 		
-	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	 # Handle wall slide logic
 	if is_on_wall() and !is_on_floor():
 		if velocity.y > WALL_SLIDE_SPEED:
 			velocity.y = WALL_SLIDE_SPEED
@@ -86,7 +109,6 @@ func _physics_process(delta):
 		else:
 			velocity.x = direction * SPEED
 	
-	# Handle jump.
 	if Input.is_action_just_pressed("jump"):
 		if is_on_wall():
 			var normal = get_wall_normal()
