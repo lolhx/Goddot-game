@@ -15,7 +15,6 @@ var gundirection = Vector2.ZERO
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # --- MANA VARIABLES ---
-# We ONLY track current mana here. Max and Regen come from the Global script!
 var current_mana = 0.0
 var mana_cost = 20.0
 
@@ -24,20 +23,17 @@ var mana_cost = 20.0
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var FireballAim = $fireballPosition 
 
-# Ensure you have added these nodes to your scene as discussed!
+# UI References
 @onready var mana_bar = $CanvasLayer/ProgressBar
+@onready var mana_label = $CanvasLayer/ProgressBar/ManaLabel # <--- NEW REFERENCE
 @onready var shop_menu = $CanvasLayer/ShopMenu 
 
 var fireball_path = preload("res://scene/fireballl_attack.tscn")
 
-# New variable for double jump
 var jumps_left = 2
 
 func _ready():
-	# Start with full mana based on your Global stat
 	current_mana = Global.max_mana
-	
-	# Hide the shop when the game starts
 	if shop_menu:
 		shop_menu.visible = false
 
@@ -57,22 +53,23 @@ func _physics_process(delta):
 			shop_menu.visible = true
 			get_tree().paused = true 
 
-	# --- STOP EVERYTHING ELSE IF PAUSED ---
-	# Add this check right here!
 	if get_tree().paused:
 		return
 
 	# --- MANA LOGIC ---
-	# Regenerate using the GLOBAL regen speed
 	if current_mana < Global.max_mana:
 		current_mana += Global.mana_regen * delta
 		if current_mana > Global.max_mana:
 			current_mana = Global.max_mana
 	
-	# Update the UI Bar
+	# --- UPDATE UI ---
 	if mana_bar:
-		mana_bar.max_value = Global.max_mana # Bar grows if you buy upgrades!
+		mana_bar.max_value = Global.max_mana
 		mana_bar.value = current_mana
+	
+	# Update the text to show "Current / Max" (e.g., "50 / 100")
+	if mana_label:
+		mana_label.text = str(int(current_mana)) + " / " + str(int(Global.max_mana))
 
 	# --- FIREBALL LOGIC ---
 	if Input.is_action_just_pressed("fire"):
@@ -87,7 +84,7 @@ func _physics_process(delta):
 		else:
 			print("Not enough mana!")
 
-	# --- MOVEMENT LOGIC (Unchanged) ---
+	# --- MOVEMENT LOGIC ---
 	if is_on_floor():
 		jumps_left = 2
 
