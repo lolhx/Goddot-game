@@ -375,7 +375,7 @@ coins_given = 25
 position = Vector2(239, 32)
 scale = Vector2(1.61744, 1.47554)
 health = 30
-coins_given = 5
+coins_given = 50
 
 [node name="coin_GUI" parent="." instance=ExtResource("4_pi28e")]
 

@@ -33,9 +33,11 @@ func _on_hit_box_area_entered(area):
 	
 	# Check if it can take damage
 	if enemy.has_method("take_damage"):
-		enemy.take_damage(damage_amount)
+		# CHANGE: Use Global.fireball_damage instead of local variable
+		enemy.take_damage(Global.fireball_damage) 
 		queue_free() # Destroy fireball
-	# Fallback: if it's an old enemy with only die(), just kill it
+		
+	# Fallback for old enemies
 	elif enemy.has_method("die"):
 		enemy.die()
 		queue_free()

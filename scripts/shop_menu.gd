@@ -4,6 +4,7 @@ extends Panel
 @onready var btn_mana_max = $BtnManaMax
 @onready var btn_mana_regen = $BtnManaRegen
 @onready var btn_jump = $BtnJump 
+@onready var btn_fire_damage = $BtnFireDamage
 
 func _process(delta):
 	# Update Coin UI
@@ -19,6 +20,9 @@ func _process(delta):
 	if btn_jump:
 		btn_jump.text = "Max Jumps (+1) \nCost: " + str(Global.cost_jump_upgrade)
 
+	if btn_fire_damage:
+		btn_fire_damage.text = "Damage (+5) \nCost: " + str(Global.cost_fireball_damage)
+		
 # --- BUTTON 1: MAX MANA ---
 func _on_btn_mana_max_pressed():
 	if Global.total_coins >= Global.cost_max_mana:
@@ -45,6 +49,19 @@ func _on_btn_jump_pressed():
 		Global.cost_jump_upgrade += 10 # Increase price by 10
 	else:
 		print("Not enough money for Jump Upgrade!")
+		
+func _on_btn_fire_damage_pressed():
+	if Global.total_coins >= Global.cost_fireball_damage:
+		# 1. Pay Coins
+		Global.total_coins -= Global.cost_fireball_damage
+		
+		# 2. Upgrade Stat (Add 5 extra damage)
+		Global.fireball_damage += 5
+		
+		# 3. Increase Price
+		Global.cost_fireball_damage += 10
+	else:
+		print("Not enough money for Damage Upgrade!")
 
 # --- CLOSE BUTTON ---
 func _on_btn_close_pressed():
