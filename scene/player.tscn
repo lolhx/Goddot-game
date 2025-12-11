@@ -302,6 +302,14 @@ offset_bottom = 177.0
 text = "Buy Faster Regen (5 coins)
 "
 
+[node name="BtnJump" type="Button" parent="CanvasLayer/ShopMenu"]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 211.0
+offset_right = 248.0
+offset_bottom = 242.0
+text = "Buy another jump (100 coins)"
+
 [node name="BtnClose" type="Button" parent="CanvasLayer/ShopMenu"]
 layout_mode = 0
 offset_left = 5.0
@@ -314,4 +322,5 @@ text = "Close"
 [connection signal="timeout" from="CanDashTimer" to="." method="_on_can_dash_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnManaMax" to="CanvasLayer/ShopMenu" method="_on_btn_mana_max_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnManaRegen" to="CanvasLayer/ShopMenu" method="_on_btn_mana_regen_pressed"]
+[connection signal="pressed" from="CanvasLayer/ShopMenu/BtnJump" to="CanvasLayer/ShopMenu" method="_on_btn_jump_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnClose" to="CanvasLayer/ShopMenu" method="_on_btn_close_pressed"]

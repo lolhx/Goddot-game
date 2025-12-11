@@ -25,7 +25,7 @@ var mana_cost = 20.0
 
 # UI References
 @onready var mana_bar = $CanvasLayer/ProgressBar
-@onready var mana_label = $CanvasLayer/ProgressBar/ManaLabel # <--- NEW REFERENCE
+@onready var mana_label = $CanvasLayer/ProgressBar/ManaLabel
 @onready var shop_menu = $CanvasLayer/ShopMenu 
 
 var fireball_path = preload("res://scene/fireballl_attack.tscn")
@@ -67,7 +67,6 @@ func _physics_process(delta):
 		mana_bar.max_value = Global.max_mana
 		mana_bar.value = current_mana
 	
-	# Update the text to show "Current / Max" (e.g., "50 / 100")
 	if mana_label:
 		mana_label.text = str(int(current_mana)) + " / " + str(int(Global.max_mana))
 
@@ -85,8 +84,10 @@ func _physics_process(delta):
 			print("Not enough mana!")
 
 	# --- MOVEMENT LOGIC ---
+	
+	# [CHANGE 1] Reset jumps to the Global max when hitting the floor
 	if is_on_floor():
-		jumps_left = 2
+		jumps_left = Global.max_jumps
 
 	if Input.is_action_just_pressed("left"):
 		FireballAim.position.x = -9
@@ -110,7 +111,10 @@ func _physics_process(delta):
 		if is_on_wall():
 			var normal = get_wall_normal()
 			velocity = Vector2(WALL_JUMP_VELOCITY.x * normal.x, WALL_JUMP_VELOCITY.y)
-			jumps_left = 2
+			
+			# [CHANGE 2] Reset jumps to Global max when wall jumping
+			jumps_left = Global.max_jumps
+			
 		elif jumps_left > 0:
 			velocity.y = JUMP_VELOCITY
 			jumps_left -= 1
