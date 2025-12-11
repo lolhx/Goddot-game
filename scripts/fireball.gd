@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 # --- THIS IS THE MISSING FUNCTION ---
-func _on_hitbox_area_entered(area):
+func _on_hit_box_area_entered(area):
 	# Check if the thing we hit (the slime's area) has a parent with a "die" function
 	if area.get_parent().has_method("die"):
 		area.get_parent().die()
