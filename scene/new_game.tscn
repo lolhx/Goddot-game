@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=4 uid="uid://duarms75qoc4w"]
+[gd_scene load_steps=10 format=4 uid="uid://duarms75qoc4w"]
 
 [ext_resource type="PackedScene" uid="uid://kbd6rbwq7edx" path="res://scene/player.tscn" id="1_ggsb8"]
 [ext_resource type="Texture2D" uid="uid://c8dubp1ebwxge" path="res://assets/sprites/world_tileset.png" id="2_d2m8j"]
 [ext_resource type="PackedScene" uid="uid://htmetgiep2ya" path="res://scene/slime.tscn" id="3_d2m8j"]
+[ext_resource type="PackedScene" uid="uid://b7u2y8lsrhnd8" path="res://scene/coin_gui.tscn" id="4_pi28e"]
+[ext_resource type="PackedScene" uid="uid://dwip2t8pt0ndi" path="res://scene/timer.tscn" id="5_0sx51"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ned08"]
 texture = ExtResource("2_d2m8j")
@@ -360,3 +362,7 @@ tile_set = SubResource("TileSet_rnujv")
 
 [node name="Slime" parent="." instance=ExtResource("3_d2m8j")]
 position = Vector2(265, 173)
+
+[node name="coin_GUI" parent="." instance=ExtResource("4_pi28e")]
+
+[node name="Timer" parent="." instance=ExtResource("5_0sx51")]

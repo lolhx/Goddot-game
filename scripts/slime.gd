@@ -20,4 +20,11 @@ func _process(delta):  # <--- Make sure this says "delta", not "de lta"
 
 # --- ADD THIS FUNCTION BELOW ---
 func die():
+	# 1. Add a coin directly to the global counter
+	Global.total_coins += 1
+	
+	# Optional: Print to console to verify it works
+	print("Slime died! Total coins: ", Global.total_coins)
+	
+	# 2. Destroy the slime
 	queue_free()
