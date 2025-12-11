@@ -1,7 +1,8 @@
-[gd_scene load_steps=31 format=3 uid="uid://kbd6rbwq7edx"]
+[gd_scene load_steps=32 format=3 uid="uid://kbd6rbwq7edx"]
 
 [ext_resource type="Texture2D" uid="uid://b6ch4khh06ahy" path="res://assets/sprites/knight.png" id="1_4yrpf"]
 [ext_resource type="Script" uid="uid://dvk5rh3vk5x81" path="res://scripts/player.gd" id="1_lvm8q"]
+[ext_resource type="AudioStream" uid="uid://c88jybpgyl5fe" path="res://assets/sounds/explosion.wav" id="3_fvtld"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lg2sa"]
 atlas = ExtResource("1_4yrpf")
@@ -235,6 +236,10 @@ wait_time = 0.2
 
 [node name="CanDashTimer" type="Timer" parent="."]
 wait_time = 0.8
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_fvtld")
+volume_db = -12.606
 
 [connection signal="timeout" from="Dash_timer" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="CanDashTimer" to="." method="_on_can_dash_timer_timeout"]

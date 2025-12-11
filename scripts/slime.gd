@@ -7,8 +7,9 @@ var direction = 1
 @onready var ray_castright: RayCast2D = $RayCastright
 @onready var ray_castleft: RayCast2D = $RayCastleft
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
-func _process(delta):  # <--- Make sure this says "delta", not "de lta"
+func _process(delta):
 	if ray_castright.is_colliding():
 		direction = -1
 		animated_sprite.flip_h = true
@@ -18,13 +19,20 @@ func _process(delta):  # <--- Make sure this says "delta", not "de lta"
 	
 	position.x += direction * SPEED * delta
 
-# --- ADD THIS FUNCTION BELOW ---
 func die():
-	# 1. Add a coin directly to the global counter
+	# 1. Add the coin
 	Global.total_coins += 1
-	
-	# Optional: Print to console to verify it works
 	print("Slime died! Total coins: ", Global.total_coins)
 	
-	# 2. Destroy the slime
+	# 2. Hide the slime and stop it from moving (so it looks dead)
+	animated_sprite.visible = false
+	set_process(false) # Stops the _process function so it stops moving
+	
+	# 3. Play the sound
+	audio_player.play()
+	
+	# 4. Wait for the sound to finish
+	await audio_player.finished
+	
+	# 5. NOW destroy the slime
 	queue_free()

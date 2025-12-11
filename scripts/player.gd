@@ -20,7 +20,7 @@ var gundirection = Vector2.ZERO
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-
+@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 var fireball_path=preload("res://scene/fireballl_attack.tscn")
 func fire(fire_direction):
 	var fireball = fireball_path.instantiate()
@@ -41,6 +41,7 @@ func _physics_process(delta):
 
 	# Check if the player can fire before doing so
 	if Input.is_action_just_pressed("fire"):
+		audio_player.play()
 		# Correctly determine the direction without rotating the player
 		if animated_sprite.flip_h == true:
 			fire(PI)  # 180 degrees for left

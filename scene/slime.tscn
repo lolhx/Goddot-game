@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://htmetgiep2ya"]
+[gd_scene load_steps=11 format=3 uid="uid://htmetgiep2ya"]
 
 [ext_resource type="Script" uid="uid://bro6rpp78njx0" path="res://scripts/slime.gd" id="1_i6ior"]
 [ext_resource type="Texture2D" uid="uid://cfy7rsax76keq" path="res://assets/sprites/slime_green.png" id="1_mod57"]
 [ext_resource type="PackedScene" uid="uid://sooe10o1ner8" path="res://scene/killzone.tscn" id="2_1nua7"]
+[ext_resource type="AudioStream" uid="uid://dkf3g22hvut1d" path="res://assets/sounds/coin.wav" id="4_wkhhu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vm7p2"]
 atlas = ExtResource("1_mod57")
@@ -66,3 +67,6 @@ target_position = Vector2(8, 0)
 [node name="RayCastleft" type="RayCast2D" parent="."]
 position = Vector2(0, -8)
 target_position = Vector2(-8, 0)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_wkhhu")
