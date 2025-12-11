@@ -43,6 +43,17 @@ func die():
 	animated_sprite.visible = false
 	set_process(false)
 	
+	# --- NEW CODE START ---
+	# Disable the slime's physical body so the player can walk through it
+	if has_node("CollisionShape2D"):
+		$CollisionShape2D.set_deferred("disabled", true)
+	
+	# Disable the Killzone (the part that kills the player)
+	# (Assuming your Killzone node is named "Killzone" - check your scene tree!)
+	if has_node("Killzone"):
+		$Killzone.set_deferred("monitoring", false)
+	
+	
 	audio_player.play()
 	await audio_player.finished
 	queue_free()
