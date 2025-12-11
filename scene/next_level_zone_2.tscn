@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dosy3ygurv103"]
+
+[ext_resource type="Script" uid="uid://kp4ypd6lkq1d" path="res://scripts/next_level_zone_2.gd" id="1_273p6"]
+
+[node name="Next level zone2" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_273p6")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.6
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

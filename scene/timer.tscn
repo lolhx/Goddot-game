@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwip2t8pt0ndi"]
+
+[ext_resource type="Script" uid="uid://crmjqfp1f70qx" path="res://scripts/timer.gd" id="1_tvd0o"]
+
+[sub_resource type="GDScript" id="GDScript_ystu8"]
+script/source = "extends Timer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[node name="Timer" type="CanvasLayer"]
+script = ExtResource("1_tvd0o")
+
+[node name="Timerlvl1" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -576.5
+offset_top = 41.0
+offset_right = -548.5
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "000"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 300.0
+one_shot = true
+script = SubResource("GDScript_ystu8")

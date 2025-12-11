@@ -1,0 +1,88 @@
+[gd_scene load_steps=4 format=3 uid="uid://hfwlju2w3hbj"]
+
+[ext_resource type="Script" uid="uid://c2egprf7pthfl" path="res://scripts/score_level_1.gd" id="1_iffhq"]
+[ext_resource type="Texture2D" uid="uid://bm4roivjwe8fl" path="res://assets/sprites/Heart.png" id="2_86a4k"]
+[ext_resource type="Texture2D" uid="uid://ypei048wajw0" path="res://assets/sprites/coin.png" id="3_7prqa"]
+
+[node name="Score level 1" type="CanvasLayer"]
+script = ExtResource("1_iffhq")
+
+[node name="you completed level" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -97.0
+offset_top = 209.0
+offset_right = 97.0
+offset_bottom = 232.0
+grow_horizontal = 2
+text = "You completed First level"
+
+[node name="Lives Left" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -57.0
+offset_right = 20.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Coins collected" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "
+"
+
+[node name="Heart" type="Sprite2D" parent="."]
+position = Vector2(583, 281)
+texture = ExtResource("2_86a4k")
+
+[node name="Coin" type="Sprite2D" parent="."]
+position = Vector2(586, 325)
+scale = Vector2(2, 2)
+texture = ExtResource("3_7prqa")
+region_enabled = true
+region_rect = Rect2(3, 3, 10, 10)
+
+[node name="Score" type="Label" parent="."]
+offset_left = 533.0
+offset_top = 355.0
+offset_right = 573.0
+offset_bottom = 378.0
+
+[node name="Lvl2Easy" type="Button" parent="."]
+offset_left = 543.0
+offset_top = 444.0
+offset_right = 590.0
+offset_bottom = 475.0
+text = "Easy"
+
+[node name="Lvl2Hard" type="Button" parent="."]
+offset_left = 543.0
+offset_top = 477.0
+offset_right = 590.0
+offset_bottom = 508.0
+text = "Hard"
+
+[node name="Choose dificulty for level 2" type="Label" parent="."]
+offset_left = 470.0
+offset_top = 417.0
+offset_right = 674.0
+offset_bottom = 440.0
+text = "Choose dificulty for level 2"
+
+[connection signal="pressed" from="Lvl2Easy" to="." method="_on_lvl_2_easy_pressed"]
+[connection signal="pressed" from="Lvl2Hard" to="." method="_on_lvl_2_hard_pressed"]

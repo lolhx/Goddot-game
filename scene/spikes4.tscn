@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://hiet45lopcj5"]
+
+[ext_resource type="Texture2D" uid="uid://gqujekofgqdi" path="res://assets/sprites/spikee.png" id="1_bryyr"]
+[ext_resource type="PackedScene" uid="uid://sooe10o1ner8" path="res://scene/killzone.tscn" id="2_natvd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dp20h"]
+radius = 5.0
+
+[node name="spikes_4" type="Node2D"]
+
+[node name="spike" type="Sprite2D" parent="."]
+texture = ExtResource("1_bryyr")
+
+[node name="spike2" type="Sprite2D" parent="."]
+position = Vector2(14, 0)
+texture = ExtResource("1_bryyr")
+
+[node name="spike3" type="Sprite2D" parent="."]
+position = Vector2(28, 0)
+texture = ExtResource("1_bryyr")
+
+[node name="spike4" type="Sprite2D" parent="."]
+position = Vector2(42, 0)
+texture = ExtResource("1_bryyr")
+
+[node name="Killzone" parent="." instance=ExtResource("2_natvd")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, 3)
+shape = SubResource("CircleShape2D_dp20h")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(14, 3)
+shape = SubResource("CircleShape2D_dp20h")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(28, 3)
+shape = SubResource("CircleShape2D_dp20h")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(42, 3)
+shape = SubResource("CircleShape2D_dp20h")

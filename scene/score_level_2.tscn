@@ -1,0 +1,95 @@
+[gd_scene load_steps=4 format=3 uid="uid://daa5keqa5cl0h"]
+
+[ext_resource type="Script" uid="uid://dhxtpq0x85rj6" path="res://scripts/score_level_2.gd" id="1_yq43d"]
+[ext_resource type="Texture2D" uid="uid://bm4roivjwe8fl" path="res://assets/sprites/Heart.png" id="2_7xe72"]
+[ext_resource type="Texture2D" uid="uid://ypei048wajw0" path="res://assets/sprites/coin.png" id="3_jvqv8"]
+
+[node name="Score level 2" type="CanvasLayer"]
+script = ExtResource("1_yq43d")
+
+[node name="you completed level" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -97.0
+offset_top = 209.0
+offset_right = 97.0
+offset_bottom = 232.0
+grow_horizontal = 2
+text = "You completed  level 2"
+
+[node name="Lives Left" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -57.0
+offset_right = 20.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Coins collected" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "
+"
+
+[node name="Heart" type="Sprite2D" parent="."]
+position = Vector2(583, 281)
+texture = ExtResource("2_7xe72")
+
+[node name="Coin" type="Sprite2D" parent="."]
+position = Vector2(586, 325)
+scale = Vector2(2, 2)
+texture = ExtResource("3_jvqv8")
+region_enabled = true
+region_rect = Rect2(3, 3, 10, 10)
+
+[node name="Score" type="Label" parent="."]
+offset_left = 533.0
+offset_top = 355.0
+offset_right = 573.0
+offset_bottom = 378.0
+
+[node name="start" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -41.0
+offset_top = 95.0
+offset_right = 46.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Play again"
+
+[node name="quit" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -41.0
+offset_top = 129.5
+offset_right = 46.0
+offset_bottom = 160.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+
+[connection signal="pressed" from="start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="quit" to="." method="_on_quit_pressed"]

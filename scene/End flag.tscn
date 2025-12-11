@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://krn2ip6y5ppc"]
+
+[ext_resource type="Texture2D" uid="uid://cvap0ce4f6d2r" path="res://assets/sprites/End flag.png" id="1_mf1x8"]
+[ext_resource type="PackedScene" uid="uid://ugnf73stgqpd" path="res://scene/next_level_zone.tscn" id="2_ddeof"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4humb"]
+size = Vector2(6, 78)
+
+[node name="End flag" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(6, 6)
+texture = ExtResource("1_mf1x8")
+
+[node name="Next level zone" parent="." instance=ExtResource("2_ddeof")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Next level zone"]
+position = Vector2(-3, 9)
+shape = SubResource("RectangleShape2D_4humb")
