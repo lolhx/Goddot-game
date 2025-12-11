@@ -287,35 +287,35 @@ text = "Coins: 0"
 
 [node name="BtnManaMax" type="Button" parent="CanvasLayer/ShopMenu"]
 layout_mode = 0
-offset_left = 19.0
-offset_top = 71.0
-offset_right = 231.0
-offset_bottom = 106.0
+offset_left = 38.0
+offset_top = 80.0
+offset_right = 250.0
+offset_bottom = 115.0
 text = "Buy Max Mana (5 coins)"
 
 [node name="BtnFireDamage" type="Button" parent="CanvasLayer/ShopMenu"]
 layout_mode = 0
-offset_left = 22.0
-offset_top = 197.0
-offset_right = 268.0
-offset_bottom = 232.0
+offset_left = 38.0
+offset_top = 220.0
+offset_right = 284.0
+offset_bottom = 255.0
 text = "Buy Fireball damage  (15 coins)"
 
 [node name="BtnManaRegen" type="Button" parent="CanvasLayer/ShopMenu"]
 layout_mode = 0
-offset_left = 21.0
-offset_top = 146.0
-offset_right = 231.0
-offset_bottom = 177.0
+offset_left = 38.0
+offset_top = 150.0
+offset_right = 248.0
+offset_bottom = 181.0
 text = "Buy Faster Regen (5 coins)
 "
 
 [node name="BtnJump" type="Button" parent="CanvasLayer/ShopMenu"]
 layout_mode = 0
-offset_left = 23.0
-offset_top = 253.0
-offset_right = 257.0
-offset_bottom = 284.0
+offset_left = 38.0
+offset_top = 290.0
+offset_right = 272.0
+offset_bottom = 321.0
 text = "Buy another jump (100 coins)"
 
 [node name="BtnClose" type="Button" parent="CanvasLayer/ShopMenu"]
