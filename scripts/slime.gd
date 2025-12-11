@@ -2,9 +2,11 @@ extends Node2D
 
 const SPEED = 60
 
-# --- NEW VARIABLE ---
-# By using @export, you can change this number in the Editor for each slime!
 @export var health = 10 
+# --- NEW CODE START ---
+# This creates a box in the editor to set coins for each slime!
+@export var coins_given = 1 
+# --- NEW CODE END ---
 
 var direction = 1
 
@@ -14,6 +16,7 @@ var direction = 1
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 func _process(delta):
+	# ... (Keep this part the same) ...
 	if ray_castright.is_colliding():
 		direction = -1
 		animated_sprite.flip_h = true
@@ -23,12 +26,9 @@ func _process(delta):
 	
 	position.x += direction * SPEED * delta
 
-# --- NEW FUNCTION ---
-# This replaces the old direct call to die()
 func take_damage(amount):
+	# ... (Keep this part the same) ...
 	health -= amount
-	
-	# Visual feedback (optional): Flash red when hit
 	animated_sprite.modulate = Color.RED
 	await get_tree().create_timer(0.1).timeout
 	animated_sprite.modulate = Color.WHITE
@@ -37,22 +37,21 @@ func take_damage(amount):
 		die()
 
 func die():
-	Global.total_coins += 1
+	# --- CHANGE THIS LINE ---
+	# Old: Global.total_coins += 1
+	Global.total_coins += coins_given 
+	# ------------------------
+	
 	print("Slime died! Total coins: ", Global.total_coins)
 	
 	animated_sprite.visible = false
 	set_process(false)
 	
-	# --- NEW CODE START ---
-	# Disable the slime's physical body so the player can walk through it
+	# (Don't forget the fix we just added for the collider!)
 	if has_node("CollisionShape2D"):
 		$CollisionShape2D.set_deferred("disabled", true)
-	
-	# Disable the Killzone (the part that kills the player)
-	# (Assuming your Killzone node is named "Killzone" - check your scene tree!)
 	if has_node("Killzone"):
 		$Killzone.set_deferred("monitoring", false)
-	
 	
 	audio_player.play()
 	await audio_player.finished

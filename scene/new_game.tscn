@@ -369,11 +369,13 @@ position = Vector2(317, 32)
 position = Vector2(622, 36)
 scale = Vector2(4.70761, 5.02025)
 health = 100
+coins_given = 25
 
 [node name="chunky slime" parent="slime" instance=ExtResource("3_d2m8j")]
 position = Vector2(239, 32)
 scale = Vector2(1.61744, 1.47554)
 health = 30
+coins_given = 5
 
 [node name="coin_GUI" parent="." instance=ExtResource("4_pi28e")]
 
