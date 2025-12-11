@@ -9,7 +9,7 @@ var direction = 1
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 
-func _process(de lta):
+func _process(delta):
 	if ray_castright.is_colliding():
 		direction = -1
 		animated_sprite.flip_h = true
@@ -19,3 +19,8 @@ func _process(de lta):
 
 	
 	position.x += direction * SPEED * delta
+
+
+
+func die():
+	queue_free()

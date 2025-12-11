@@ -45,3 +45,11 @@ position = Vector2(12, -2)
 shape = SubResource("CircleShape2D_shv3v")
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="Hit box" type="Area2D" parent="."]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hit box"]
+position = Vector2(12, -2)
+shape = SubResource("CircleShape2D_shv3v")
+
+[connection signal="area_entered" from="Hit box" to="." method="_on_hit_box_area_entered"]
