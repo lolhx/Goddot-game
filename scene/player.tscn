@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://kbd6rbwq7edx"]
+[gd_scene load_steps=33 format=3 uid="uid://kbd6rbwq7edx"]
 
 [ext_resource type="Texture2D" uid="uid://b6ch4khh06ahy" path="res://assets/sprites/knight.png" id="1_4yrpf"]
 [ext_resource type="Script" uid="uid://dvk5rh3vk5x81" path="res://scripts/player.gd" id="1_lvm8q"]
@@ -212,6 +212,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_n8imr"]
 radius = 6.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fvtld"]
+bg_color = Color(0, 0, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [node name="player" type="CharacterBody2D"]
 light_mask = 2
 z_index = 5
@@ -240,6 +247,16 @@ wait_time = 0.8
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_fvtld")
 volume_db = -12.606
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer"]
+offset_top = 80.0
+offset_right = 85.0
+offset_bottom = 107.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_fvtld")
+step = 1.0
+value = 100.0
 
 [connection signal="timeout" from="Dash_timer" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="CanDashTimer" to="." method="_on_can_dash_timer_timeout"]
