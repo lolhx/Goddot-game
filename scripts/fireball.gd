@@ -23,11 +23,9 @@ func _physics_process(delta: float) -> void:
 	if is_on_wall():
 		queue_free()
 
-# This is the new function triggered by the signal
+# --- THIS IS THE MISSING FUNCTION ---
 func _on_hitbox_area_entered(area):
-	print("Fireball hit area: ", area.name) # Debug print
-	
-	# Check if the parent (the Slime) has the 'die' function
+	# Check if the thing we hit (the slime's area) has a parent with a "die" function
 	if area.get_parent().has_method("die"):
 		area.get_parent().die()
-		queue_free()
+		queue_free() # Destroy the fireball
