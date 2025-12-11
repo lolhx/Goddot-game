@@ -24,8 +24,18 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 
+# Add a damage variable
+var damage_amount = 10
+
 func _on_hit_box_area_entered(area):
-	# Check if the thing we hit (the slime's area) has a parent with a "die" function
-	if area.get_parent().has_method("die"):
-		area.get_parent().die()
-		queue_free() # Destroy the fireball
+	# Get the parent (the Slime)
+	var enemy = area.get_parent()
+	
+	# Check if it can take damage
+	if enemy.has_method("take_damage"):
+		enemy.take_damage(damage_amount)
+		queue_free() # Destroy fireball
+	# Fallback: if it's an old enemy with only die(), just kill it
+	elif enemy.has_method("die"):
+		enemy.die()
+		queue_free()

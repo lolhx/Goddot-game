@@ -2,6 +2,10 @@ extends Node2D
 
 const SPEED = 60
 
+# --- NEW VARIABLE ---
+# By using @export, you can change this number in the Editor for each slime!
+@export var health = 10 
+
 var direction = 1
 
 @onready var ray_castright: RayCast2D = $RayCastright
@@ -19,20 +23,26 @@ func _process(delta):
 	
 	position.x += direction * SPEED * delta
 
+# --- NEW FUNCTION ---
+# This replaces the old direct call to die()
+func take_damage(amount):
+	health -= amount
+	
+	# Visual feedback (optional): Flash red when hit
+	animated_sprite.modulate = Color.RED
+	await get_tree().create_timer(0.1).timeout
+	animated_sprite.modulate = Color.WHITE
+	
+	if health <= 0:
+		die()
+
 func die():
-	# 1. Add the coin
 	Global.total_coins += 1
 	print("Slime died! Total coins: ", Global.total_coins)
 	
-	# 2. Hide the slime and stop it from moving (so it looks dead)
 	animated_sprite.visible = false
-	set_process(false) # Stops the _process function so it stops moving
+	set_process(false)
 	
-	# 3. Play the sound
 	audio_player.play()
-	
-	# 4. Wait for the sound to finish
 	await audio_player.finished
-	
-	# 5. NOW destroy the slime
 	queue_free()
