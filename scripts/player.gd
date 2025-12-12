@@ -12,7 +12,6 @@ var cand_dash = true
 
 # --- INTERNAL VARIABLES ---
 var direction = 0
-var gundirection = Vector2.ZERO
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # --- MANA & SPELL SETTINGS ---
@@ -24,19 +23,20 @@ var jumps_left = 2
 
 # --- COMBAT SETTINGS ---
 var is_attacking = false
-var is_pogo_attack = false # NEW: Tracks if we are swinging downwards
+var sword_damage = 20
+var is_pogo_attack = false # Tracks if we are attacking DOWN
 
 # --- NODES ---
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var FireballAim = $fireballPosition 
 
-# UI References
 @onready var mana_bar = $CanvasLayer/ProgressBar
 @onready var mana_label = $CanvasLayer/ProgressBar/ManaLabel
 @onready var shop_menu = $CanvasLayer/ShopMenu 
 
-# Sword References
+# --- SWORD NODES ---
+# Make sure you created a node named "SwordArea" inside your Player scene!
 @onready var sword_area = $SwordArea 
 @onready var sword_sprite = $SwordArea/Sprite2D
 @onready var sword_collider = $SwordArea/CollisionShape2D
@@ -46,12 +46,14 @@ var fireball_path = preload("res://scene/fireballl_attack.tscn")
 func _ready():
 	current_mana = Global.max_mana
 	if shop_menu: shop_menu.visible = false
+	
+	# Start with sword hidden and safe
 	if sword_area:
 		sword_area.monitoring = false
 		sword_sprite.visible = false
 
 func _physics_process(delta):
-	# --- SHOP / PAUSE LOGIC ---
+	# --- SHOP ---
 	if Input.is_action_just_pressed("shop"): 
 		if shop_menu.visible:
 			shop_menu.visible = false
@@ -61,7 +63,7 @@ func _physics_process(delta):
 			get_tree().paused = true 
 	if get_tree().paused: return
 
-	# --- MANA LOGIC ---
+	# --- MANA ---
 	if current_mana < Global.max_mana:
 		current_mana += Global.mana_regen * delta
 		if current_mana > Global.max_mana: current_mana = Global.max_mana
@@ -83,25 +85,23 @@ func _physics_process(delta):
 			if animated_sprite.flip_h: fire(PI)
 			else: fire(0)
 
-	# --- MOVEMENT LOGIC ---
+	# --- MOVEMENT ---
 	if is_on_floor(): jumps_left = Global.max_jumps
 
-	# Aiming (Left/Right)
+	# --- AIMING ---
 	if Input.is_action_just_pressed("left"):
 		FireballAim.position.x = -9
-		sword_area.scale.x = -1 # Flip sword to left
+		sword_area.scale.x = -1 # Flip sword left
 	if Input.is_action_just_pressed("right"):
 		FireballAim.position.x = 9
-		sword_area.scale.x = 1  # Flip sword to right
+		sword_area.scale.x = 1 # Flip sword right
 		
-	# --- POGO AIMING (NEW) ---
-	# If we are in the air AND holding down, point sword down
+	# --- POGO LOGIC (Down Attack) ---
 	if not is_on_floor() and Input.is_action_pressed("down"):
 		is_pogo_attack = true
-		# Rotate 90 degrees to point down. 
-		# We multiply by scale.x so it rotates the correct way whether facing left or right.
+		# Rotate sword to point DOWN
 		sword_area.rotation_degrees = 90 * sword_area.scale.x
-		sword_area.position.y = 15 # Move it down a bit to reach feet
+		sword_area.position.y = 15 # Lower it to feet
 	else:
 		is_pogo_attack = false
 		sword_area.rotation_degrees = 0
@@ -110,7 +110,7 @@ func _physics_process(delta):
 	# Gravity
 	if not is_on_floor(): velocity += get_gravity() * delta
 
-	# Wall Slide & Jump
+	# Wall Logic
 	if is_on_wall() and !is_on_floor():
 		if velocity.y > WALL_SLIDE_SPEED: velocity.y = WALL_SLIDE_SPEED
 		var normal = get_wall_normal()
@@ -118,6 +118,7 @@ func _physics_process(delta):
 		if (direction > 0 and normal.x == -1) or (direction < 0 and normal.x == 1): velocity.x = 0
 		else: velocity.x = direction * SPEED
 	
+	# Jump
 	if Input.is_action_just_pressed("jump"):
 		if is_on_wall():
 			var normal = get_wall_normal()
@@ -127,7 +128,7 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 			jumps_left -= 1
 		
-	# Dashing
+	# Dash
 	if Input.is_action_just_pressed("dash") and cand_dash:
 		dashing = true
 		cand_dash = false
@@ -135,10 +136,7 @@ func _physics_process(delta):
 		$CanDashTimer.start()
 		
 	var direction := Input.get_axis("left", "right")
-	if direction: velocity.x = direction * SPEED
-	else: velocity.x = move_toward(velocity.x, 0, SPEED)
 	
-	# Sprite Flipping
 	if direction > 0: animated_sprite.flip_h = false
 	elif direction < 0: animated_sprite.flip_h = true
 		
@@ -171,33 +169,35 @@ func attack():
 	sword_sprite.visible = true
 	sword_area.monitoring = true
 	
+	# Wait for swing
 	await get_tree().create_timer(0.3).timeout
 	
 	sword_area.monitoring = false
 	sword_sprite.visible = false
 	is_attacking = false
 
-# --- HIT DETECTION & RECOIL ---
+# --- HIT DETECTION ---
+# IMPORTANT: Connect the 'area_entered' signal from SwordArea to this function!
 func _on_sword_area_area_entered(area):
 	var enemy = area.get_parent()
 	
 	if enemy.has_method("take_damage"):
-		print("Slash hit!")
-		enemy.take_damage(Global.sword_damage)
+		print("Sword hit enemy!")
+		enemy.take_damage(sword_damage)
 		
-		# --- RECOIL LOGIC ---
+		# --- BOUNCE LOGIC ---
 		if is_pogo_attack:
-			# If we hit something while aiming down -> BOUNCE UP!
-			velocity.y = -800
-			# Optional: Reset dash so you can dash again after pogoing (like Hollow Knight)
-			cand_dash = true 
+			velocity.y = -400 # Bounce Up!
+			cand_dash = true  # Refresh Dash
 		else:
-			# Normal Horizontal Recoil
-			if animated_sprite.flip_h == false:
-				velocity.x = -300
-			else:
-				velocity.x = 300
+			# Normal Pushback
+			if animated_sprite.flip_h == false: velocity.x = -300
+			else: velocity.x = 300
 
-# --- TIMERS ---
+# Keep this for walls/boxes (Physics Bodies)
+func _on_sword_area_body_entered(body):
+	if body.has_method("take_damage"):
+		body.take_damage(sword_damage)
+
 func _on_dash_timeout(): dashing = false
 func _on_can_dash_timer_timeout() -> void: cand_dash = true
