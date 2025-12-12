@@ -179,10 +179,10 @@ func attack():
 # --- HIT DETECTION ---
 # IMPORTANT: Connect the 'area_entered' signal from SwordArea to this function!
 func _on_sword_area_area_entered(area):
-	var enemy = area.get_parent()
+	var enemy = area.get_parent() # Gets the "Slime" node
 	
 	if enemy.has_method("take_damage"):
-		print("Sword hit enemy!")
+		print("Sword hit enemy!") # Watch for this in the Output window
 		enemy.take_damage(sword_damage)
 		
 		# --- BOUNCE LOGIC ---

@@ -350,5 +350,5 @@ shape = SubResource("RectangleShape2D_s4jxa")
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnManaRegen" to="CanvasLayer/ShopMenu" method="_on_btn_mana_regen_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnJump" to="CanvasLayer/ShopMenu" method="_on_btn_jump_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnClose" to="CanvasLayer/ShopMenu" method="_on_btn_close_pressed"]
-[connection signal="area_shape_entered" from="SwordArea" to="." method="_on_sword_area_area_shape_entered"]
+[connection signal="area_entered" from="SwordArea" to="." method="_on_sword_area_area_entered"]
 [connection signal="body_entered" from="SwordArea" to="." method="_on_sword_area_body_entered"]
