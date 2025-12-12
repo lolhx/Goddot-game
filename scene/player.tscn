@@ -1,9 +1,10 @@
-[gd_scene load_steps=34 format=3 uid="uid://kbd6rbwq7edx"]
+[gd_scene load_steps=36 format=3 uid="uid://kbd6rbwq7edx"]
 
 [ext_resource type="Texture2D" uid="uid://b6ch4khh06ahy" path="res://assets/sprites/knight.png" id="1_4yrpf"]
 [ext_resource type="Script" uid="uid://dvk5rh3vk5x81" path="res://scripts/player.gd" id="1_lvm8q"]
 [ext_resource type="AudioStream" uid="uid://c88jybpgyl5fe" path="res://assets/sounds/explosion.wav" id="3_fvtld"]
 [ext_resource type="Script" uid="uid://b750e2mqb6v2b" path="res://scripts/shop_menu.gd" id="4_ct4mp"]
+[ext_resource type="Texture2D" uid="uid://crveour5iv3d5" path="res://assets/Pixel Swords Assets 16x16/Assets/23.png" id="5_s4jxa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lg2sa"]
 atlas = ExtResource("1_4yrpf")
@@ -220,6 +221,9 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s4jxa"]
+size = Vector2(4.24232, 14.1238)
+
 [node name="player" type="CharacterBody2D"]
 process_mode = 3
 light_mask = 2
@@ -326,6 +330,19 @@ offset_right = 55.0
 offset_bottom = 520.0
 text = "Close"
 
+[node name="SwordArea" type="Area2D" parent="."]
+monitoring = false
+
+[node name="Sprite2D" type="Sprite2D" parent="SwordArea"]
+position = Vector2(17, 6)
+rotation = 0.785398
+texture = ExtResource("5_s4jxa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordArea"]
+position = Vector2(20, 6)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_s4jxa")
+
 [connection signal="timeout" from="Dash_timer" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="CanDashTimer" to="." method="_on_can_dash_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnManaMax" to="CanvasLayer/ShopMenu" method="_on_btn_mana_max_pressed"]
@@ -333,3 +350,4 @@ text = "Close"
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnManaRegen" to="CanvasLayer/ShopMenu" method="_on_btn_mana_regen_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnJump" to="CanvasLayer/ShopMenu" method="_on_btn_jump_pressed"]
 [connection signal="pressed" from="CanvasLayer/ShopMenu/BtnClose" to="CanvasLayer/ShopMenu" method="_on_btn_close_pressed"]
+[connection signal="body_entered" from="SwordArea" to="." method="_on_sword_area_body_entered"]
