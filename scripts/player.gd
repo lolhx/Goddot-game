@@ -223,3 +223,10 @@ func _on_dash_timeout():
 
 func _on_can_dash_timer_timeout() -> void:
 	cand_dash = true
+
+
+func _on_sword_area_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+	var enemy = area.get_parent()
+	if enemy.has_method("take_damage"):
+		# Use Global damage instead of the local variable
+		enemy.take_damage(Global.sword_damage)
