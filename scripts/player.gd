@@ -26,7 +26,8 @@ var is_attacking = false
 var sword_damage = 20
 var is_pogo_attack = false 
 
-# [NEW] Input Buffer: Remembers direction presses during attacks
+# [NEW] INPUT BUFFER
+# This variable stores your button press if you click it while attacking
 var buffered_direction = 0 
 
 # --- NODES ---
@@ -34,6 +35,7 @@ var buffered_direction = 0
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var FireballAim = $fireballPosition 
 
+# UI References
 @onready var mana_bar = $CanvasLayer/ProgressBar
 @onready var mana_label = $CanvasLayer/ProgressBar/ManaLabel
 @onready var shop_menu = $CanvasLayer/ShopMenu 
@@ -54,7 +56,7 @@ func _ready():
 		sword_sprite.visible = false
 
 func _physics_process(delta):
-	# --- SHOP ---
+	# --- SHOP / PAUSE ---
 	if Input.is_action_just_pressed("shop"): 
 		if shop_menu.visible:
 			shop_menu.visible = false
@@ -64,7 +66,7 @@ func _physics_process(delta):
 			get_tree().paused = true 
 	if get_tree().paused: return
 
-	# --- MANA ---
+	# --- MANA REGEN ---
 	if current_mana < Global.max_mana:
 		current_mana += Global.mana_regen * delta
 		if current_mana > Global.max_mana: current_mana = Global.max_mana
@@ -79,12 +81,14 @@ func _physics_process(delta):
 	# 1. Get current input (-1, 0, or 1)
 	var input_dir = Input.get_axis("left", "right")
 	
-	# 2. INPUT BUFFERING
-	# If we are attacking, we can't turn yet. 
-	# But if the player presses a key, SAVE IT into 'buffered_direction'.
+	# 2. [NEW] INPUT BUFFERING logic
+	# If we are busy attacking, check if the player tries to turn.
+	# If they do, SAVE IT into 'buffered_direction' to use later.
 	if is_attacking:
-		if input_dir != 0:
-			buffered_direction = input_dir
+		if Input.is_action_just_pressed("left"):
+			buffered_direction = -1
+		elif Input.is_action_just_pressed("right"):
+			buffered_direction = 1
 	
 	# 3. ATTACK INPUT
 	if Input.is_action_just_pressed("attack") and not is_attacking:
@@ -104,11 +108,11 @@ func _physics_process(delta):
 	# Only change facing direction if we are NOT attacking
 	if not is_attacking:
 		
-		# [NEW] Check Buffer First
-		# If we have a saved turn from the attack, use it immediately!
+		# [NEW] Check Buffer First!
+		# If we have a stored turn from the attack, APPLY IT NOW.
 		if buffered_direction != 0:
 			input_dir = buffered_direction
-			buffered_direction = 0 # Clear the buffer after using it
+			buffered_direction = 0 # Reset buffer
 		
 		# Apply Direction
 		if input_dir > 0:
@@ -123,6 +127,7 @@ func _physics_process(delta):
 		# Pogo Aiming (Down + Air)
 		if not is_on_floor() and Input.is_action_pressed("down"):
 			is_pogo_attack = true
+			# We set rotation to 180 here just as a starting point for the pogo
 			sword_area.rotation_degrees = 180 
 			sword_area.position.y = 10 
 		else:
@@ -195,20 +200,25 @@ func attack():
 	var end_angle
 	
 	if is_pogo_attack:
+		# POGO: V-shape chop downwards
 		start_angle = 45
 		end_angle = 135
 	else:
+		# NORMAL: Chop downwards
 		start_angle = -45 
 		end_angle = 45
 		
-	# Flip angles if facing left
+	# --- LEFT FLIP FIX ---
+	# If facing left, invert the angles so it doesn't swing upwards
 	if sword_area.scale.x == -1:
 		start_angle = start_angle * -1
 		end_angle = end_angle * -1
 	
+	# Start the swing
 	sword_area.rotation_degrees = start_angle
 	tween.tween_property(sword_area, "rotation_degrees", end_angle, 0.2)
 	
+	# Wait exactly as long as the tween (0.2s)
 	await get_tree().create_timer(0.2).timeout
 	
 	# Reset
@@ -217,8 +227,8 @@ func attack():
 	is_attacking = false
 	sword_area.rotation_degrees = 0
 	
-	# [NEW] Check buffer immediately after attack ends!
-	# This handles the "Tap" case perfectly.
+	# [NEW] INSTANTLY APPLY BUFFERED INPUT
+	# If we pressed a key during the swing, turn NOW.
 	if buffered_direction != 0:
 		if buffered_direction > 0:
 			sword_area.scale.x = 1
@@ -226,15 +236,18 @@ func attack():
 		elif buffered_direction < 0:
 			sword_area.scale.x = -1
 			animated_sprite.flip_h = true
-		buffered_direction = 0
+		# Don't reset buffered_direction to 0 yet, 
+		# let the _physics_process pick it up one last time to apply velocity
 
 # --- HIT DETECTION ---
 func _on_sword_area_area_entered(area):
 	var enemy = area.get_parent()
 	if enemy.has_method("take_damage"):
 		enemy.take_damage(Global.sword_damage)
+		
+		# Recoil
 		if is_pogo_attack:
-			velocity.y = -350 
+			velocity.y = -400 
 			cand_dash = true  
 		else:
 			if animated_sprite.flip_h == false: velocity.x = -300

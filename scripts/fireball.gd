@@ -11,6 +11,9 @@ func _ready():
 	global_position = pos
 	global_rotation = rota
 	
+	# --- NEW LINE: Start the burning animation ---
+	animated_sprite.play("default") 
+	
 	if dir == PI:
 		animated_sprite.flip_h = true
 	else:
