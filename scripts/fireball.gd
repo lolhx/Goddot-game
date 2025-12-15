@@ -31,16 +31,13 @@ func _physics_process(delta: float) -> void:
 var damage_amount = 10
 
 func _on_hit_box_area_entered(area):
-	# Get the parent (the Slime)
 	var enemy = area.get_parent()
 	
-	# Check if it can take damage
 	if enemy.has_method("take_damage"):
-		# CHANGE: Use Global.fireball_damage instead of local variable
-		enemy.take_damage(Global.fireball_damage) 
-		queue_free() # Destroy fireball
+		# Pass the Fireball's position as the attacker position
+		enemy.take_damage(Global.fireball_damage, global_position) 
+		queue_free()
 		
-	# Fallback for old enemies
 	elif enemy.has_method("die"):
 		enemy.die()
 		queue_free()
