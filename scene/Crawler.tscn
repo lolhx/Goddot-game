@@ -1,0 +1,78 @@
+[gd_scene load_steps=11 format=3 uid="uid://d1p4ndp0hp75n"]
+
+[ext_resource type="Script" uid="uid://dsbyl2wa3bfar" path="res://scripts/crawler.gd" id="1_1wqmu"]
+[ext_resource type="Texture2D" uid="uid://d10ly0k0law1f" path="res://assets/sprites/slime_purple.png" id="2_4vhwb"]
+[ext_resource type="PackedScene" uid="uid://sooe10o1ner8" path="res://scene/killzone.tscn" id="3_otyvy"]
+[ext_resource type="AudioStream" uid="uid://dkf3g22hvut1d" path="res://assets/sounds/coin.wav" id="4_cvktp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_otyvy"]
+atlas = ExtResource("2_4vhwb")
+region = Rect2(0, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvktp"]
+atlas = ExtResource("2_4vhwb")
+region = Rect2(24, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_suhtw"]
+atlas = ExtResource("2_4vhwb")
+region = Rect2(48, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ookw2"]
+atlas = ExtResource("2_4vhwb")
+region = Rect2(72, 24, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ee0h4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_otyvy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cvktp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_suhtw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ookw2")
+}],
+"loop": true,
+"name": &"idle slime",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mdvdl"]
+size = Vector2(10, 12)
+
+[node name="Crawler" type="Node2D"]
+script = ExtResource("1_1wqmu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_ee0h4")
+animation = &"idle slime"
+autoplay = "idle slime"
+frame_progress = 0.44177
+
+[node name="Killzone" parent="." instance=ExtResource("3_otyvy")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_mdvdl")
+
+[node name="RayCastDownLeft" type="RayCast2D" parent="."]
+position = Vector2(0, -8)
+target_position = Vector2(-9, 15)
+
+[node name="RayCastDownRight" type="RayCast2D" parent="."]
+position = Vector2(0, -8)
+target_position = Vector2(9, 15)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_cvktp")
+
+[node name="WallCheck" type="RayCast2D" parent="."]
+target_position = Vector2(10, 5)
+
+[node name="FloorCheck" type="RayCast2D" parent="."]
+target_position = Vector2(10, 15)
