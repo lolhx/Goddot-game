@@ -52,6 +52,7 @@ offset_left = 557.0
 offset_top = 352.0
 offset_right = 603.0
 offset_bottom = 368.0
+text = "Test"
 
 [connection signal="pressed" from="Easy" to="." method="_on_easy_pressed"]
 [connection signal="pressed" from="Hard" to="." method="_on_hard_pressed"]
