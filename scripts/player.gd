@@ -243,9 +243,10 @@ func attack():
 func _on_sword_area_area_entered(area):
 	var enemy = area.get_parent()
 	if enemy.has_method("take_damage"):
-		enemy.take_damage(Global.sword_damage)
+		# PASS 'global_position' SO THE ENEMY KNOWS WHERE WE ARE!
+		enemy.take_damage(Global.sword_damage, global_position)
 		
-		# Recoil
+		# Player Recoil (Your existing bounce logic)
 		if is_pogo_attack:
 			velocity.y = -400 
 			cand_dash = true  

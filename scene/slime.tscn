@@ -64,6 +64,14 @@ shape = SubResource("RectangleShape2D_mdvdl")
 position = Vector2(0, -8)
 target_position = Vector2(8, 0)
 
+[node name="RayCastDownLeft" type="RayCast2D" parent="."]
+position = Vector2(0, -8)
+target_position = Vector2(-9, 15)
+
+[node name="RayCastDownRight" type="RayCast2D" parent="."]
+position = Vector2(0, -8)
+target_position = Vector2(9, 15)
+
 [node name="RayCastleft" type="RayCast2D" parent="."]
 position = Vector2(0, -8)
 target_position = Vector2(-8, 0)
