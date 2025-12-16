@@ -52,12 +52,12 @@ position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_ee0h4")
 animation = &"idle slime"
 autoplay = "idle slime"
-frame_progress = 0.44177
+frame_progress = 0.827436
 
 [node name="Killzone" parent="." instance=ExtResource("3_otyvy")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
-position = Vector2(0, -7)
+position = Vector2(0, -6)
 shape = SubResource("RectangleShape2D_mdvdl")
 
 [node name="RayCastDownLeft" type="RayCast2D" parent="."]
@@ -72,7 +72,9 @@ target_position = Vector2(9, 15)
 stream = ExtResource("4_cvktp")
 
 [node name="WallCheck" type="RayCast2D" parent="."]
-target_position = Vector2(10, 5)
+position = Vector2(5, -5)
+target_position = Vector2(10, 0)
 
 [node name="FloorCheck" type="RayCast2D" parent="."]
-target_position = Vector2(10, 15)
+position = Vector2(5, 0)
+target_position = Vector2(0, 15)
