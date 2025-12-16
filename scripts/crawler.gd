@@ -9,60 +9,57 @@ var is_dead = false
 var is_taking_damage = false 
 var turn_cooldown = false 
 
-# --- SENSORS ---
 @onready var wall_check = $WallCheck
 @onready var floor_check = $FloorCheck
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var audio_player = $AudioStreamPlayer2D
 
 func _ready():
-	# --- AUTO-CORRECT SENSORS ---
-	# This forces your RayCasts to the correct positions via code
-	# so you don't have to worry about the Scene tab settings.
-	
+	# --- 1. SETUP SENSORS ---
 	if wall_check:
-		# Start at "chest height" (y=-5) to avoid tripping on the floor
 		wall_check.position = Vector2(5, -5)
-		# Look straight forward (x=10, y=0)
-		wall_check.target_position = Vector2(10, 0)
+		wall_check.target_position = Vector2(12, 0) # Slightly longer reach
 		wall_check.enabled = true
+		# FORCE mask to Layer 1 (World) only. Ignores Player (2) and Enemies (3)
+		wall_check.collision_mask = 1 
 		
 	if floor_check:
-		# Start slightly forward (x=5) to see ledges early
 		floor_check.position = Vector2(5, 0)
-		# Look straight down
-		floor_check.target_position = Vector2(0, 15)
+		floor_check.target_position = Vector2(0, 20) # Deeper reach
 		floor_check.enabled = true
+		# FORCE mask to Layer 1 (World) only
+		floor_check.collision_mask = 1
 
 func _process(delta):
 	if is_dead or is_taking_damage:
 		return
 	
-	# --- 1. GRAVITY FIX ---
-	# If neither sensor hits anything, we are floating. Fall down!
+	# --- 2. GRAVITY (Prevents Floating) ---
 	if not floor_check.is_colliding() and not wall_check.is_colliding():
-		global_position.y += 150 * delta
-		return # Stop crawling while falling
+		# If we are falling, fall FAST so we catch the floor
+		global_position.y += 200 * delta
+		return 
 
-	# --- 2. MOVEMENT ---
+	# --- 3. MOVEMENT ---
 	position += transform.x * SPEED * delta
 	
-	# --- 3. COOLDOWN ---
-	# If we just turned, stop thinking for 0.2s so we don't spin
+	# --- 4. COOLDOWN ---
 	if turn_cooldown:
 		return
 
-	# --- 4. TURNING LOGIC ---
-	
+	# --- 5. TURNING LOGIC ---
 	if wall_check.is_colliding():
-		# HIT A WALL -> Nudge forward into it, then rotate UP (-90)
-		position += transform.x * 2 
-		start_turn_cooldown()
-		rotation_degrees -= 90
+		# Wall detected? Snap to it and rotate UP
+		var collider = wall_check.get_collider()
+		# Only rotate if it's actually a TileMap or World object
+		if collider is TileMap or collider is StaticBody2D:
+			position += transform.x * 3 # Nudge into wall
+			start_turn_cooldown()
+			rotation_degrees -= 90
 		
 	elif not floor_check.is_colliding():
-		# RAN OFF LEDGE -> Nudge forward over the edge, then rotate DOWN (+90)
-		position += transform.x * 5
+		# Ledge detected? Move past edge and rotate DOWN
+		position += transform.x * 5 # Nudge past corner
 		start_turn_cooldown()
 		rotation_degrees += 90
 
@@ -76,10 +73,7 @@ func take_damage(amount, attacker_pos = null):
 	health -= amount
 	animated_sprite.modulate = Color.RED
 	is_taking_damage = true
-	
-	# Simple knockback
 	position -= transform.x * 10 
-	
 	await get_tree().create_timer(0.1).timeout
 	animated_sprite.modulate = Color.WHITE
 	is_taking_damage = false
