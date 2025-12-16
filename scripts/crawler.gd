@@ -9,57 +9,65 @@ var is_dead = false
 var is_taking_damage = false 
 var turn_cooldown = false 
 
+# STATE VARIABLE
+# False = Falling (Gravity On)
+# True = Stuck to wall (Gravity Off, Ledge Logic On)
+var is_crawling = false 
+
 @onready var wall_check = $WallCheck
 @onready var floor_check = $FloorCheck
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var audio_player = $AudioStreamPlayer2D
 
 func _ready():
-	# --- 1. SETUP SENSORS ---
+	# --- SENSOR SETUP ---
 	if wall_check:
 		wall_check.position = Vector2(5, -5)
-		wall_check.target_position = Vector2(12, 0) # Slightly longer reach
+		wall_check.target_position = Vector2(10, 0)
 		wall_check.enabled = true
-		# FORCE mask to Layer 1 (World) only. Ignores Player (2) and Enemies (3)
-		wall_check.collision_mask = 1 
+		wall_check.collision_mask = 1 # Only see World
 		
 	if floor_check:
 		floor_check.position = Vector2(5, 0)
-		floor_check.target_position = Vector2(0, 20) # Deeper reach
+		floor_check.target_position = Vector2(0, 15)
 		floor_check.enabled = true
-		# FORCE mask to Layer 1 (World) only
-		floor_check.collision_mask = 1
+		floor_check.collision_mask = 1 # Only see World
 
 func _process(delta):
 	if is_dead or is_taking_damage:
 		return
 	
-	# --- 2. GRAVITY (Prevents Floating) ---
-	if not floor_check.is_colliding() and not wall_check.is_colliding():
-		# If we are falling, fall FAST so we catch the floor
+	# --- PHASE 1: FALLING (Gravity) ---
+	if not is_crawling:
+		# Fall down
 		global_position.y += 200 * delta
-		return 
+		
+		# CHECK FOR LANDING
+		if floor_check.is_colliding() or wall_check.is_colliding():
+			is_crawling = true
+			# Snap to the floor immediately
+			if floor_check.is_colliding():
+				rotation_degrees = 0
+		return # Skip crawling logic while falling
 
-	# --- 3. MOVEMENT ---
+	# --- PHASE 2: CRAWLING (No Gravity) ---
+	
+	# Move Forward
 	position += transform.x * SPEED * delta
 	
-	# --- 4. COOLDOWN ---
-	if turn_cooldown:
-		return
+	if turn_cooldown: return
 
-	# --- 5. TURNING LOGIC ---
+	# --- TURNING LOGIC ---
 	if wall_check.is_colliding():
-		# Wall detected? Snap to it and rotate UP
-		var collider = wall_check.get_collider()
-		# Only rotate if it's actually a TileMap or World object
-		if collider is TileMap or collider is StaticBody2D:
-			position += transform.x * 3 # Nudge into wall
-			start_turn_cooldown()
-			rotation_degrees -= 90
+		# WALL DETECTED -> Turn Up
+		position += transform.x * 2 # Nudge into wall to latch on
+		start_turn_cooldown()
+		rotation_degrees -= 90
 		
 	elif not floor_check.is_colliding():
-		# Ledge detected? Move past edge and rotate DOWN
-		position += transform.x * 5 # Nudge past corner
+		# LEDGE DETECTED -> Turn Down
+		# Because is_crawling is true, we know this is a ledge, not air!
+		position += transform.x * 5 # Move past the corner
 		start_turn_cooldown()
 		rotation_degrees += 90
 
