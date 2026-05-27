@@ -1,15 +1,16 @@
 extends Area2D
 
-
 @onready var timer: Timer = $Timer
 
 func _on_body_entered(body):
 	if body.name == "player":
-		# --- NEW CHECK ---
-		# If time is already slowed, the player is already dead. Stop here.
+		# --- NEW: Check if the player is currently Pogoing ---
+		if body.is_pogo_attack:
+			return # Do nothing! The player is safe while pogoing.
+			
+		# If not pogoing, proceed with death logic...
 		if Engine.time_scale != 1.0:
 			return
-		# -----------------
 		
 		print("you died")
 		Engine.time_scale = 0.5

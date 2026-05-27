@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dwip2t8pt0ndi" path="res://scene/timer.tscn" id="5_0sx51"]
 [ext_resource type="PackedScene" uid="uid://d1p4ndp0hp75n" path="res://scene/Crawler.tscn" id="6_0sx51"]
 [ext_resource type="PackedScene" uid="uid://sooe10o1ner8" path="res://scene/killzone.tscn" id="7_v0n8y"]
+[ext_resource type="PackedScene" uid="uid://2tfjjyy2wy5h" path="res://scene/spike.tscn" id="8_hdrd1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ned08"]
 texture = ExtResource("2_d2m8j")
@@ -396,3 +397,6 @@ position = Vector2(11, 90)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone" unique_id=287529489]
 position = Vector2(51, 185)
 shape = SubResource("WorldBoundaryShape2D_hdrd1")
+
+[node name="spike" parent="." unique_id=854516365 instance=ExtResource("8_hdrd1")]
+position = Vector2(328, 168)

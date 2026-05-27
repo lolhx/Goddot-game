@@ -252,17 +252,34 @@ func attack():
 # --- HIT DETECTION ---
 func _on_sword_area_area_entered(area):
 	var enemy = area.get_parent()
+	
+	# Check if we hit an enemy
 	if enemy.has_method("take_damage"):
 		# PASS 'global_position' SO THE ENEMY KNOWS WHERE WE ARE!
 		enemy.take_damage(Global.sword_damage, global_position)
 		
-		# Player Recoil (Your existing bounce logic)
+		# Player Recoil
 		if is_pogo_attack:
 			velocity.y = -400 
 			cand_dash = true  
 		else:
 			if animated_sprite.flip_h == false: velocity.x = -300
 			else: velocity.x = 300
+			
+	# --- NEW SPIKE BOUNCE LOGIC ---
+	elif area.is_in_group("spike") and is_pogo_attack:
+		# Launch the player up!
+		velocity.y = -600 
+		cand_dash = true
+		
+		# Briefly turn off the player's main collision so they don't die instantly
+		$CollisionShape2D.set_deferred("disabled", true)
+		
+		# Wait 0.1 seconds (just enough time to bounce away)
+		await get_tree().create_timer(0.1).timeout
+		
+		# Turn the collision back on
+		$CollisionShape2D.set_deferred("disabled", false)
 
 func _on_sword_area_body_entered(body):
 	if body.has_method("take_damage"):
