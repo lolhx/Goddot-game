@@ -59,7 +59,7 @@ func _on_btn_fire_damage_pressed():
 		Global.fireball_damage += 5
 		
 		# 3. Increase Price
-		Global.cost_fireball_damage += 17
+		Global.cost_fireball_damage += 15
 	else:
 		print("Not enough money for Damage Upgrade!")
 
