@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://ffunwl6pm8km"]
+[gd_scene format=3 uid="uid://ffunwl6pm8km"]
 
 [ext_resource type="Script" uid="uid://csv2ojwn3nq2r" path="res://scripts/choose_didficulty.gd" id="1_8hcq6"]
 
-[node name="Game_dificulty" type="CanvasLayer"]
+[node name="Game_dificulty" type="CanvasLayer" unique_id=995073677]
 script = ExtResource("1_8hcq6")
 
-[node name="Game dificulty" type="Label" parent="."]
+[node name="Game dificulty" type="Label" parent="." unique_id=1312844601]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -19,7 +19,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Game Dificulty"
 
-[node name="Easy" type="Button" parent="."]
+[node name="Easy" type="Button" parent="." unique_id=888747115]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -33,7 +33,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Easy"
 
-[node name="Hard" type="Button" parent="."]
+[node name="Hard" type="Button" parent="." unique_id=404214114]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -47,11 +47,11 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Hard"
 
-[node name="practise" type="Button" parent="."]
-offset_left = 557.0
-offset_top = 352.0
-offset_right = 603.0
-offset_bottom = 368.0
+[node name="practise" type="Button" parent="." unique_id=1502223503]
+offset_left = 555.0
+offset_top = 354.0
+offset_right = 601.0
+offset_bottom = 385.0
 text = "Test"
 
 [connection signal="pressed" from="Easy" to="." method="_on_easy_pressed"]

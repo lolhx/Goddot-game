@@ -25,7 +25,7 @@ var jumps_left = 2
 var is_attacking = false
 var sword_damage = 20
 var is_pogo_attack = false 
-
+var is_up_attack = false 
 # [NEW] INPUT BUFFER
 # This variable stores your button press if you click it while attacking
 var buffered_direction = 0 
@@ -124,14 +124,20 @@ func _physics_process(delta):
 			FireballAim.position.x = -9
 			animated_sprite.flip_h = true
 
-		# Pogo Aiming (Down + Air)
+		# Aiming (Down + Air / Up)
 		if not is_on_floor() and Input.is_action_pressed("down"):
 			is_pogo_attack = true
-			# We set rotation to 180 here just as a starting point for the pogo
+			is_up_attack = false
 			sword_area.rotation_degrees = 180 
 			sword_area.position.y = 10 
+		elif Input.is_action_pressed("up"):
+			is_up_attack = true
+			is_pogo_attack = false
+			sword_area.rotation_degrees = -90 # Point straight up as a starting point
+			sword_area.position.y = 0 # Move the sword hit area above the player
 		else:
 			is_pogo_attack = false
+			is_up_attack = false
 			sword_area.rotation_degrees = 0
 			sword_area.position.y = 0
 
@@ -203,6 +209,10 @@ func attack():
 		# POGO: V-shape chop downwards
 		start_angle = 45
 		end_angle = 135
+	elif is_up_attack:
+		# UP SLASH: V-shape sweep upwards over the head
+		start_angle = -45
+		end_angle = -135
 	else:
 		# NORMAL: Chop downwards
 		start_angle = -45 

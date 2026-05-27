@@ -28,7 +28,7 @@ func _on_btn_mana_max_pressed():
 	if Global.total_coins >= Global.cost_max_mana:
 		Global.total_coins -= Global.cost_max_mana
 		Global.max_mana += 20.0
-		Global.cost_max_mana += 5
+		Global.cost_max_mana += 6
 	else:
 		print("Not enough money for Mana Max!")
 
@@ -59,7 +59,7 @@ func _on_btn_fire_damage_pressed():
 		Global.fireball_damage += 5
 		
 		# 3. Increase Price
-		Global.cost_fireball_damage += 10
+		Global.cost_fireball_damage += 17
 	else:
 		print("Not enough money for Damage Upgrade!")
 
